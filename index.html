@@ -298,6 +298,7 @@
     overflow: hidden;
     transition: border-color 0.2s ease, transform 0.2s ease;
     position: relative;
+    cursor: pointer;
   }
 
   .product:hover{ border-color: var(--border-strong); transform: translateY(-3px); }
@@ -388,6 +389,7 @@
     position: relative;
     background: linear-gradient(160deg, #34291a, #0f0d0a 65%);
     border: 1px solid rgba(0,0,0,0.4);
+    transition: opacity 0.15s ease;
   }
 
   .modal-screen::after{
@@ -395,6 +397,14 @@
     position:absolute; inset:0;
     background: radial-gradient(circle at 30% 25%, rgba(201,166,107,0.55), transparent 55%);
   }
+
+  .modal-screen.variant-b::after{
+    background: radial-gradient(circle at 68% 68%, rgba(245,241,234,0.4), transparent 55%);
+  }
+
+  /* NOTE: once you have real wallpaper images, replace the ::after gradients
+     with a real <img> tag or background-image set via JS (see swapMainImage
+     in the script below) instead of these placeholder gradients. */
 
   .modal-thumbs{
     display:flex; gap: 8px; margin-top: 14px; flex-wrap: wrap;
@@ -405,6 +415,9 @@
     background: linear-gradient(160deg, #34291a, #0f0d0a 65%);
     position: relative; overflow: hidden;
     border: 1px solid var(--border);
+    cursor: pointer;
+    padding: 0;
+    transition: border-color 0.15s ease, transform 0.15s ease;
   }
 
   .modal-thumb::after{
@@ -413,8 +426,15 @@
     background: radial-gradient(circle at 30% 30%, rgba(201,166,107,0.5), transparent 60%);
   }
 
-  .modal-thumb:nth-child(3n)::after{
+  .modal-thumb.variant-b::after{
     background: radial-gradient(circle at 65% 65%, rgba(245,241,234,0.35), transparent 55%);
+  }
+
+  .modal-thumb:hover{ transform: translateY(-2px); }
+
+  .modal-thumb.active{
+    border-color: var(--gold);
+    box-shadow: 0 0 0 1px var(--gold);
   }
 
   .modal-info h3{ font-size: 28px; margin-bottom: 10px; }
@@ -511,7 +531,7 @@
     </div>
     <div class="grid">
 
-      <div class="product">
+      <div class="product" data-product="golden-hour">
         <div class="badges">
           <span class="badge badge-exclusive">Exclusive</span>
           <span class="badge badge-bestseller">Best seller</span>
@@ -531,7 +551,7 @@
         </div>
       </div>
 
-      <div class="product">
+      <div class="product" data-product="quiet-hours">
         <div class="device-monitor">
           <div class="monitor-screen"></div>
           <div class="monitor-neck"></div>
@@ -547,7 +567,7 @@
         </div>
       </div>
 
-      <div class="product">
+      <div class="product" data-product="faint-horizon">
         <div class="device-monitor">
           <div class="monitor-screen"></div>
           <div class="monitor-neck"></div>
@@ -577,7 +597,7 @@
     </div>
     <div class="grid">
 
-      <div class="product">
+      <div class="product" data-product="amber-dusk">
         <div class="device-phone">
           <div class="phone-screen">
             <div class="phone-notch"></div>
@@ -594,7 +614,7 @@
         </div>
       </div>
 
-      <div class="product">
+      <div class="product" data-product="mixed-feelings">
         <div class="device-phone">
           <div class="phone-screen">
             <div class="phone-notch"></div>
@@ -611,7 +631,7 @@
         </div>
       </div>
 
-      <div class="product">
+      <div class="product" data-product="effects">
         <div class="device-phone">
           <div class="phone-screen">
             <div class="phone-notch"></div>
@@ -648,7 +668,7 @@
     <button class="modal-back" id="modalBack">&larr; back</button>
     <div class="modal-body">
       <div>
-        <div class="modal-screen"></div>
+        <div class="modal-screen" id="modalScreen"></div>
         <div class="modal-thumbs" id="modalThumbs"></div>
       </div>
       <div class="modal-info">
@@ -679,12 +699,14 @@
   const modalBullets = document.getElementById('modalBullets');
   const modalCta = document.getElementById('modalCta');
   const modalThumbs = document.getElementById('modalThumbs');
+  const modalScreen = document.getElementById('modalScreen');
 
-  document.querySelectorAll('.see-more').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      const data = products[btn.dataset.product];
+  document.querySelectorAll('.product[data-product]').forEach(function(card){
+    card.addEventListener('click', function(){
+      const data = products[card.dataset.product];
       if(!data) return;
 
+      modalScreen.className = 'modal-screen variant-a';
       modalTitle.textContent = data.title;
       modalPrice.textContent = data.price;
       modalCta.textContent = 'get this pack — ' + data.price.replace('.00','');
@@ -699,9 +721,23 @@
       });
 
       modalThumbs.innerHTML = '';
-      for(let i = 0; i < Math.min(data.count, 10); i++){
-        const t = document.createElement('div');
-        t.className = 'modal-thumb';
+      const thumbCount = Math.min(data.count, 10);
+      for(let i = 0; i < thumbCount; i++){
+        const variant = i % 2 === 0 ? 'variant-a' : 'variant-b';
+        const t = document.createElement('button');
+        t.type = 'button';
+        t.className = 'modal-thumb ' + variant + (i === 0 ? ' active' : '');
+        t.setAttribute('aria-label', 'View wallpaper ' + (i + 1));
+        // NOTE: once real images exist, set t.style.backgroundImage = `url(${data.images[i]})`
+        // here instead of relying on the variant-a / variant-b placeholder gradients.
+        t.addEventListener('click', function(){
+          modalThumbs.querySelectorAll('.modal-thumb').forEach(function(el){ el.classList.remove('active'); });
+          t.classList.add('active');
+          modalScreen.classList.remove('variant-a', 'variant-b');
+          modalScreen.classList.add(variant);
+          // NOTE: once real images exist, replace the two lines above with:
+          // modalScreen.style.backgroundImage = `url(${data.images[i]})`;
+        });
         modalThumbs.appendChild(t);
       }
 
