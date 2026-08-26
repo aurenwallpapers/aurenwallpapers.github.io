@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Auren — Fine art wallpapers</title>
-<meta name="description" content="AI-generated desktop and iPhone wallpapers with a soft, painterly light.">
+<title>Auren — Premium wallpapers</title>
+<meta name="description" content="Premium desktop and iPhone wallpapers crafted with warmth, texture, and light.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -261,12 +261,15 @@
     border-radius: 22px;
     overflow: hidden;
     position: relative;
-    background: linear-gradient(165deg, #34291a, #0f0d0a 70%);
+    background-color: #0f0d0a;
+    background-image: linear-gradient(165deg, #34291a, #0f0d0a 70%);
+    background-size: cover;
+    background-position: center;
     border: 3px solid #1c1a17;
     box-shadow: 0 0 0 1px rgba(245,241,234,0.06);
   }
 
-  .phone-screen::after{
+  .phone-screen:not([style*="background-image"])::after{
     content:"";
     position:absolute; inset:0;
     background: radial-gradient(circle at 30% 22%, rgba(201,166,107,0.6), transparent 55%);
@@ -279,16 +282,6 @@
     background: #0a0a09;
     border-radius: 100px;
     z-index: 2;
-  }
-
-  .phone-time{
-    position:absolute; top: 30px; left:50%;
-    transform: translateX(-50%);
-    font-family:'Inter',sans-serif;
-    font-size: 15px; font-weight: 500;
-    color: rgba(245,241,234,0.9);
-    z-index: 2;
-    letter-spacing: 0.02em;
   }
 
   /* ---------- Product cards ---------- */
@@ -317,7 +310,18 @@
   }
 
   .badge-exclusive{ background: rgba(245,241,234,0.12); color: var(--cream); backdrop-filter: blur(6px); }
-  .badge-bestseller{ background: var(--gold-soft); color: #3d2e10; }
+  .badge-soon{ background: rgba(245,241,234,0.1); color: var(--text-secondary); border: 1px solid var(--border-strong); }
+
+  .product.soon{ cursor: default; }
+  .product.soon:hover{ transform: none; border-color: var(--border); }
+  .price-soon{ color: var(--text-muted); }
+
+  .soon-btn{
+    color: var(--text-muted) !important;
+    border-color: var(--border) !important;
+    cursor: not-allowed;
+  }
+  .soon-btn:hover{ border-color: var(--border) !important; }
 
   .product-body{ padding: 22px 22px 24px; }
   .product-body h3{ font-size: 17px; margin-bottom: 6px; }
@@ -398,19 +402,19 @@
     transition: opacity 0.15s ease;
   }
 
-  .modal-screen::after{
+  .modal-screen[style*="background-image"]::after{
+    content: none;
+  }
+
+  .modal-screen:not([style*="background-image"])::after{
     content:"";
     position:absolute; inset:0;
     background: radial-gradient(circle at 30% 25%, rgba(201,166,107,0.55), transparent 55%);
   }
 
-  .modal-screen.variant-b::after{
+  .modal-screen.variant-b:not([style*="background-image"])::after{
     background: radial-gradient(circle at 68% 68%, rgba(245,241,234,0.4), transparent 55%);
   }
-
-  /* NOTE: once you have real wallpaper images, replace the ::after gradients
-     with a real <img> tag or background-image set via JS (see swapMainImage
-     in the script below) instead of these placeholder gradients. */
 
   .modal-thumbs{
     display:flex; gap: 8px; margin-top: 14px; flex-wrap: wrap;
@@ -426,13 +430,17 @@
     transition: border-color 0.15s ease, transform 0.15s ease;
   }
 
-  .modal-thumb::after{
+  .modal-thumb[style*="background-image"]::after{
+    content: none;
+  }
+
+  .modal-thumb:not([style*="background-image"])::after{
     content:"";
     position:absolute; inset:0;
     background: radial-gradient(circle at 30% 30%, rgba(201,166,107,0.5), transparent 60%);
   }
 
-  .modal-thumb.variant-b::after{
+  .modal-thumb.variant-b:not([style*="background-image"])::after{
     background: radial-gradient(circle at 65% 65%, rgba(245,241,234,0.35), transparent 55%);
   }
 
@@ -507,23 +515,22 @@
     <nav>
       <a href="#desktop">Desktop</a>
       <a href="#iphone">iPhone</a>
-      <a href="#faq">FAQ</a>
       <a href="#desktop" class="nav-cta">View collections</a>
     </nav>
   </header>
 
   <section class="hero">
     <a href="#desktop" class="drop-pill"><span class="dot"></span>Latest drop — Built different</a>
-    <h1>Wallpapers <em>painted by light</em></h1>
-    <p>Carefully crafted wallpaper bundles with a soft, painterly light — built to dress your desktop and iPhone.</p>
+    <h1>Make your screen <em>worth looking at</em></h1>
+    <p>Premium wallpaper bundles crafted with warmth, texture, and light — built to dress your desktop and iPhone.</p>
     <a href="#desktop" class="btn btn-primary">View collections</a>
   </section>
 
   <div class="stats">
-    <div class="stat"><div class="num">64</div><div class="label">Wallpapers</div></div>
-    <div class="stat"><div class="num">1200+</div><div class="label">Bundles sold</div></div>
-    <div class="stat"><div class="num">4K</div><div class="label">Resolution</div></div>
-    <div class="stat"><div class="num">5</div><div class="label">Star rated</div></div>
+    <div class="stat"><div class="num">7</div><div class="label">Wallpapers live</div></div>
+    <div class="stat"><div class="num">4K+</div><div class="label">Resolution</div></div>
+    <div class="stat"><div class="num">Desktop</div><div class="label">&amp; iPhone</div></div>
+    <div class="stat"><div class="num">Instant</div><div class="label">Download</div></div>
   </div>
 
   <!-- ---------- DESKTOP COLLECTION ---------- -->
@@ -540,7 +547,6 @@
       <div class="product" data-product="built-different">
         <div class="badges">
           <span class="badge badge-exclusive">Exclusive</span>
-          <span class="badge badge-bestseller">Best seller</span>
         </div>
         <div class="device-monitor">
           <div class="monitor-screen" style="background-image:url('assets/built-different/web/01-hands-money.jpg')"></div>
@@ -557,7 +563,10 @@
         </div>
       </div>
 
-      <div class="product" data-product="quiet-hours">
+      <div class="product soon">
+        <div class="badges">
+          <span class="badge badge-soon">Soon available</span>
+        </div>
         <div class="device-monitor">
           <div class="monitor-screen"></div>
           <div class="monitor-neck"></div>
@@ -565,15 +574,18 @@
         </div>
         <div class="product-body">
           <h3 class="serif">Quiet hours</h3>
-          <p class="meta">20 wallpapers · moody aesthetic</p>
+          <p class="meta">0 wallpapers · moody aesthetic</p>
           <div class="product-footer">
-            <div class="price-row"><span class="price">$12</span><span class="price-old">$14</span></div>
-            <button class="see-more" data-product="quiet-hours">See more →</button>
+            <div class="price-row"><span class="price price-soon">—</span></div>
+            <button class="see-more soon-btn" disabled>Get this pack</button>
           </div>
         </div>
       </div>
 
-      <div class="product" data-product="faint-horizon">
+      <div class="product soon">
+        <div class="badges">
+          <span class="badge badge-soon">Soon available</span>
+        </div>
         <div class="device-monitor">
           <div class="monitor-screen"></div>
           <div class="monitor-neck"></div>
@@ -581,10 +593,10 @@
         </div>
         <div class="product-body">
           <h3 class="serif">Faint horizon</h3>
-          <p class="meta">15 wallpapers · landscapes</p>
+          <p class="meta">0 wallpapers · landscapes</p>
           <div class="product-footer">
-            <div class="price-row"><span class="price">$9</span></div>
-            <button class="see-more" data-product="faint-horizon">See more →</button>
+            <div class="price-row"><span class="price price-soon">—</span></div>
+            <button class="see-more soon-btn" disabled>Get this pack</button>
           </div>
         </div>
       </div>
@@ -603,53 +615,59 @@
     </div>
     <div class="grid">
 
-      <div class="product" data-product="amber-dusk">
+      <div class="product" data-product="built-different-iphone">
+        <div class="badges">
+          <span class="badge badge-exclusive">Exclusive</span>
+        </div>
         <div class="device-phone">
-          <div class="phone-screen">
+          <div class="phone-screen" style="background-image:url('assets/built-different/web/01-hands-money.jpg')">
             <div class="phone-notch"></div>
-            <div class="phone-time">11:14</div>
           </div>
         </div>
         <div class="product-body">
-          <h3 class="serif">Amber dusk</h3>
-          <p class="meta">Lock + home screen</p>
+          <h3 class="serif">Built different</h3>
+          <p class="meta">7 wallpapers</p>
           <div class="product-footer">
-            <div class="price-row"><span class="price">$2</span></div>
-            <button class="see-more" data-product="amber-dusk">See more →</button>
+            <div class="price-row"><span class="price">$5</span></div>
+            <button class="see-more" data-product="built-different-iphone">See more →</button>
           </div>
         </div>
       </div>
 
-      <div class="product" data-product="mixed-feelings">
+      <div class="product soon">
+        <div class="badges">
+          <span class="badge badge-soon">Soon available</span>
+        </div>
         <div class="device-phone">
           <div class="phone-screen">
             <div class="phone-notch"></div>
-            <div class="phone-time">22:59</div>
           </div>
         </div>
         <div class="product-body">
           <h3 class="serif">Mixed feelings</h3>
-          <p class="meta">3 wallpapers</p>
+          <p class="meta">0 wallpapers</p>
           <div class="product-footer">
-            <div class="price-row"><span class="price">$5</span></div>
-            <button class="see-more" data-product="mixed-feelings">See more →</button>
+            <div class="price-row"><span class="price price-soon">—</span></div>
+            <button class="see-more soon-btn" disabled>Get this pack</button>
           </div>
         </div>
       </div>
 
-      <div class="product" data-product="effects">
+      <div class="product soon">
+        <div class="badges">
+          <span class="badge badge-soon">Soon available</span>
+        </div>
         <div class="device-phone">
           <div class="phone-screen">
             <div class="phone-notch"></div>
-            <div class="phone-time">11:20</div>
           </div>
         </div>
         <div class="product-body">
           <h3 class="serif">Effects</h3>
-          <p class="meta">8 wallpapers</p>
+          <p class="meta">0 wallpapers</p>
           <div class="product-footer">
-            <div class="price-row"><span class="price">$5</span></div>
-            <button class="see-more" data-product="effects">See more →</button>
+            <div class="price-row"><span class="price price-soon">—</span></div>
+            <button class="see-more soon-btn" disabled>Get this pack</button>
           </div>
         </div>
       </div>
@@ -660,7 +678,6 @@
   <footer>
     <span>© 2026 Auren</span>
     <div class="footer-links">
-      <a href="#faq">FAQ</a>
       <a href="mailto:hello@auren.com">Contact</a>
       <a href="#">Instagram</a>
       <a href="#">TikTok</a>
@@ -707,11 +724,22 @@
         "assets/built-different/web/07-stairs-light.jpg"
       ]
     },
-    "quiet-hours": { title: "Quiet hours", price: "$12.00", count: 20, stripeUrl: "#", extras: ["moody aesthetic", "4K resolution"] },
-    "faint-horizon": { title: "Faint horizon", price: "$9.00", count: 15, stripeUrl: "#", extras: ["landscapes", "4K resolution"] },
-    "amber-dusk": { title: "Amber dusk", price: "$2.00", count: 2, stripeUrl: "#", extras: ["lock + home screen", "iPhone optimized"] },
-    "mixed-feelings": { title: "Mixed feelings", price: "$5.00", count: 3, stripeUrl: "#", extras: ["iPhone optimized"] },
-    "effects": { title: "Effects", price: "$5.00", count: 8, stripeUrl: "#", extras: ["iPhone optimized"] }
+    "built-different-iphone": {
+      title: "Built different (iPhone)",
+      price: "$5.00",
+      count: 7,
+      stripeUrl: "#",
+      extras: ["palette knife oil painting style", "optimized for iPhone lock & home screen"],
+      images: [
+        "assets/built-different/web/01-hands-money.jpg",
+        "assets/built-different/web/02-desk-watch.jpg",
+        "assets/built-different/web/03-empty-gym.jpg",
+        "assets/built-different/web/04-man-surfing-airplane.jpg",
+        "assets/built-different/web/05-hanged-suit.jpg",
+        "assets/built-different/web/06-man-city-skyline.jpg",
+        "assets/built-different/web/07-stairs-light.jpg"
+      ]
+    }
   };
 
   const overlay = document.getElementById('modalOverlay');
