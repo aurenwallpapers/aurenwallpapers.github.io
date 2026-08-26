@@ -232,17 +232,20 @@
     border-radius: 8px 8px 3px 3px;
     overflow: hidden;
     position: relative;
-    background: linear-gradient(160deg, #34291a, #0f0d0a 65%);
+    background-color: #0f0d0a;
+    background-size: cover;
+    background-position: center;
     border: 1px solid rgba(0,0,0,0.4);
   }
 
-  .monitor-screen::after{
+  /* Placeholder gradient only shows when no real photo (background-image) is set */
+  .monitor-screen:not([style*="background-image"])::after{
     content:"";
     position:absolute; inset:0;
     background: radial-gradient(circle at 25% 25%, rgba(201,166,107,0.55), transparent 55%);
   }
 
-  .product:nth-child(2n) .monitor-screen::after{
+  .product:nth-child(2n) .monitor-screen:not([style*="background-image"])::after{
     background: radial-gradient(circle at 70% 70%, rgba(245,241,234,0.4), transparent 55%);
   }
 
@@ -507,7 +510,7 @@
   </header>
 
   <section class="hero">
-    <a href="#desktop" class="drop-pill"><span class="dot"></span>Latest drop — Golden hour</a>
+    <a href="#desktop" class="drop-pill"><span class="dot"></span>Latest drop — Built different</a>
     <h1>Wallpapers <em>painted by light</em></h1>
     <p>Carefully crafted wallpaper bundles with a soft, painterly light — built to dress your desktop and iPhone.</p>
     <a href="#desktop" class="btn btn-primary">View collections</a>
@@ -531,22 +534,22 @@
     </div>
     <div class="grid">
 
-      <div class="product" data-product="golden-hour">
+      <div class="product" data-product="built-different">
         <div class="badges">
           <span class="badge badge-exclusive">Exclusive</span>
           <span class="badge badge-bestseller">Best seller</span>
         </div>
         <div class="device-monitor">
-          <div class="monitor-screen"></div>
+          <div class="monitor-screen" style="background-image:url('assets/built-different/web/01-hands-money.jpg')"></div>
           <div class="monitor-neck"></div>
           <div class="monitor-base"></div>
         </div>
         <div class="product-body">
-          <h3 class="serif">Golden hour</h3>
-          <p class="meta">18 wallpapers · oil painting</p>
+          <h3 class="serif">Built different</h3>
+          <p class="meta">7 wallpapers · palette knife oil painting</p>
           <div class="product-footer">
-            <div class="price-row"><span class="price">$9</span></div>
-            <button class="see-more" data-product="golden-hour">See more →</button>
+            <div class="price-row"><span class="price">$8</span></div>
+            <button class="see-more" data-product="built-different">See more →</button>
           </div>
         </div>
       </div>
@@ -685,7 +688,22 @@
 
 <script>
   const products = {
-    "golden-hour": { title: "Golden hour", price: "$9.00", count: 18, stripeUrl: "#", extras: ["oil painting style", "4K resolution"] },
+    "built-different": {
+      title: "Built different",
+      price: "$8.00",
+      count: 7,
+      stripeUrl: "#",
+      extras: ["palette knife oil painting style", "4K+ resolution (5344×2996)"],
+      images: [
+        "assets/built-different/web/01-hands-money.jpg",
+        "assets/built-different/web/02-desk-watch.jpg",
+        "assets/built-different/web/03-empty-gym.jpg",
+        "assets/built-different/web/04-man-surfing-airplane.jpg",
+        "assets/built-different/web/05-hanged-suit.jpg",
+        "assets/built-different/web/06-man-city-skyline.jpg",
+        "assets/built-different/web/07-stairs-light.jpg"
+      ]
+    },
     "quiet-hours": { title: "Quiet hours", price: "$12.00", count: 20, stripeUrl: "#", extras: ["moody aesthetic", "4K resolution"] },
     "faint-horizon": { title: "Faint horizon", price: "$9.00", count: 15, stripeUrl: "#", extras: ["landscapes", "4K resolution"] },
     "amber-dusk": { title: "Amber dusk", price: "$2.00", count: 2, stripeUrl: "#", extras: ["lock + home screen", "iPhone optimized"] },
@@ -706,7 +724,8 @@
       const data = products[card.dataset.product];
       if(!data) return;
 
-      modalScreen.className = 'modal-screen variant-a';
+      modalScreen.className = 'modal-screen';
+      modalScreen.style.backgroundImage = data.images ? `url('${data.images[0]}')` : '';
       modalTitle.textContent = data.title;
       modalPrice.textContent = data.price;
       modalCta.textContent = 'get this pack — ' + data.price.replace('.00','');
@@ -723,20 +742,25 @@
       modalThumbs.innerHTML = '';
       const thumbCount = Math.min(data.count, 10);
       for(let i = 0; i < thumbCount; i++){
-        const variant = i % 2 === 0 ? 'variant-a' : 'variant-b';
         const t = document.createElement('button');
         t.type = 'button';
-        t.className = 'modal-thumb ' + variant + (i === 0 ? ' active' : '');
+        const hasRealImage = data.images && data.images[i];
+        t.className = 'modal-thumb' + (!hasRealImage ? (i % 2 === 0 ? ' variant-a' : ' variant-b') : '') + (i === 0 ? ' active' : '');
         t.setAttribute('aria-label', 'View wallpaper ' + (i + 1));
-        // NOTE: once real images exist, set t.style.backgroundImage = `url(${data.images[i]})`
-        // here instead of relying on the variant-a / variant-b placeholder gradients.
+        if (hasRealImage) {
+          t.style.backgroundImage = `url('${data.images[i]}')`;
+          t.style.backgroundSize = 'cover';
+          t.style.backgroundPosition = 'center';
+        }
         t.addEventListener('click', function(){
           modalThumbs.querySelectorAll('.modal-thumb').forEach(function(el){ el.classList.remove('active'); });
           t.classList.add('active');
-          modalScreen.classList.remove('variant-a', 'variant-b');
-          modalScreen.classList.add(variant);
-          // NOTE: once real images exist, replace the two lines above with:
-          // modalScreen.style.backgroundImage = `url(${data.images[i]})`;
+          if (hasRealImage) {
+            modalScreen.style.backgroundImage = `url('${data.images[i]}')`;
+          } else {
+            modalScreen.classList.remove('variant-a', 'variant-b');
+            modalScreen.classList.add(i % 2 === 0 ? 'variant-a' : 'variant-b');
+          }
         });
         modalThumbs.appendChild(t);
       }
