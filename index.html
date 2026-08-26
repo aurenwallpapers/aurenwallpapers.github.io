@@ -732,7 +732,7 @@
         <div class="modal-divider"></div>
         <div class="label">What you get:</div>
         <ul id="modalBullets"></ul>
-        <a href="#" class="modal-cta" id="modalCta" target="_blank" rel="noopener">get this pack — $9</a>
+        <a href="#" class="modal-cta" id="modalCta" data-gumroad-overlay-checkout="true" rel="noopener">Unlock this pack — $9</a>
       </div>
     </div>
   </div>
@@ -744,7 +744,7 @@
       title: "Built different",
       price: "$8.00",
       count: 7,
-      stripeUrl: "#",
+      stripeUrl: "https://aurenwallpapers.gumroad.com/l/built-different",
       extras: ["palette knife oil painting style", "4K+ resolution (5344×2996)"],
       images: [
         "assets/built-different/web/01-hands-money.jpg",
@@ -775,7 +775,7 @@
       modalScreen.style.backgroundImage = data.images ? `url('${data.images[0]}')` : '';
       modalTitle.textContent = data.title;
       modalPrice.textContent = data.price;
-      modalCta.textContent = 'get this pack — ' + data.price.replace('.00','');
+      modalCta.textContent = 'Unlock this pack — ' + data.price.replace('.00','');
       modalCta.href = data.stripeUrl;
 
       modalBullets.innerHTML = '';
@@ -877,5 +877,6 @@
   })();
 </script>
 
+<script src="https://gumroad.com/js/gumroad.js"></script>
 </body>
 </html>
