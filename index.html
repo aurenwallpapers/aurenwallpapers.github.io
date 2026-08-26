@@ -88,6 +88,37 @@
 
   @media (prefers-reduced-motion: reduce){ .aura{ animation: none; } }
 
+  .aura-layer{ position: absolute; inset: 0; will-change: transform; }
+
+  /* ---------- Floating dust particles ---------- */
+  .dust-field{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .dust{
+    position: absolute;
+    bottom: -5vh;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(227,200,147,0.9) 0%, rgba(227,200,147,0.15) 60%, transparent 100%);
+    filter: blur(1px);
+    animation: dust-rise linear infinite;
+  }
+
+  @keyframes dust-rise{
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    8%   { opacity: var(--dust-opacity, 0.5); }
+    92%  { opacity: var(--dust-opacity, 0.5); }
+    100% { transform: translateY(-115vh) translateX(var(--dust-drift, 20px)); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .dust{ display: none; }
+  }
+
   /* ---------- Layout shell ---------- */
   .wrap{
     max-width: 1160px;
@@ -504,10 +535,11 @@
 <body>
 
 <div class="aura-field">
-  <div class="aura aura--gold-1"></div>
-  <div class="aura aura--white"></div>
-  <div class="aura aura--gold-2"></div>
+  <div class="aura-layer" data-speed="0.06"><div class="aura aura--gold-1"></div></div>
+  <div class="aura-layer" data-speed="-0.04"><div class="aura aura--white"></div></div>
+  <div class="aura-layer" data-speed="0.09"><div class="aura aura--gold-2"></div></div>
 </div>
+<div class="dust-field" id="dustField"></div>
 
 <div class="wrap">
   <header>
@@ -797,6 +829,52 @@
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape') closeModal();
   });
+
+  // ---------- Floating dust particles ----------
+  (function(){
+    const field = document.getElementById('dustField');
+    if(!field) return;
+    const count = 22;
+    for(let i = 0; i < count; i++){
+      const d = document.createElement('div');
+      d.className = 'dust';
+      const size = 2 + Math.random() * 4;
+      const left = Math.random() * 100;
+      const duration = 14 + Math.random() * 16;
+      const delay = Math.random() * -30;
+      const drift = (Math.random() * 60 - 30) + 'px';
+      const opacity = 0.25 + Math.random() * 0.35;
+      d.style.width = size + 'px';
+      d.style.height = size + 'px';
+      d.style.left = left + '%';
+      d.style.animationDuration = duration + 's';
+      d.style.animationDelay = delay + 's';
+      d.style.setProperty('--dust-drift', drift);
+      d.style.setProperty('--dust-opacity', opacity);
+      field.appendChild(d);
+    }
+  })();
+
+  // ---------- Aura parallax on scroll ----------
+  (function(){
+    const layers = document.querySelectorAll('.aura-layer');
+    if(!layers.length) return;
+    let ticking = false;
+    function applyParallax(){
+      const y = window.scrollY;
+      layers.forEach(function(layer){
+        const speed = parseFloat(layer.dataset.speed) || 0;
+        layer.style.transform = 'translateY(' + (y * speed) + 'px)';
+      });
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){
+      if(!ticking){
+        window.requestAnimationFrame(applyParallax);
+        ticking = true;
+      }
+    }, { passive: true });
+  })();
 </script>
 
 </body>
